@@ -18,7 +18,7 @@ namespace APIHotel.Controllers
             agencia = new(this.configuration);
         }
 
-        [HttpGet("~/listar")]
+        [HttpGet("listar")]
         public IActionResult Listar()
         {
 
@@ -28,7 +28,7 @@ namespace APIHotel.Controllers
 
         }
 
-        [HttpGet("~/listar/{id}")]
+        [HttpGet("listar/{id}")]
         public IActionResult Buscar(int id)
         {
 
@@ -38,7 +38,7 @@ namespace APIHotel.Controllers
 
         }
 
-        [HttpPost("~/agregar")]
+        [HttpPost("agregar")]
         public IActionResult Agregar([FromBody]JsonElement resultado)
         {
             var respuesta = agencia.Agregar(resultado);
@@ -47,7 +47,7 @@ namespace APIHotel.Controllers
 
         }
 
-        [HttpPut("~/modificar/{id}")]
+        [HttpPut("modificar/{id}")]
         public IActionResult Modificar(int id ,[FromBody] JsonElement resultado)
         {
             var respuesta = agencia.Modificar(id,resultado);

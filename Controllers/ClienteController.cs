@@ -1,83 +1,59 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using APIHotel.BLL;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace APIHotel.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class ClienteController : Controller
     {
-        // GET: ClienteController
-        public ActionResult Index()
+        public IConfiguration configuration;
+        private Cliente cliente;
+        public ClienteController(IConfiguration configuration)
         {
-            return View();
+            this.configuration = configuration;
+
+            cliente = new(this.configuration);
         }
 
-        // GET: ClienteController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet("listar")]
+        public IActionResult Listar()
         {
-            return View();
+
+            var respuesta = cliente.Listar();
+
+            return Ok(respuesta);
+
         }
 
-        // GET: ClienteController/Create
-        public ActionResult Create()
+        [HttpGet("listar/{id}")]
+        public IActionResult Buscar(int id)
         {
-            return View();
+
+            var respuesta = cliente.Buscar(id);
+
+            return Ok(respuesta);
+
         }
 
-        // POST: ClienteController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        [HttpPost("agregar")]
+        public IActionResult Agregar([FromBody] JsonElement resultado)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var respuesta = cliente.Agregar(resultado);
+
+            return Ok(respuesta);
+
         }
 
-        // GET: ClienteController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpPut("modificar/{id}")]
+        public IActionResult Modificar(int id, [FromBody] JsonElement resultado)
         {
-            return View();
-        }
+            var respuesta = cliente.Modificar(id, resultado);
 
-        // POST: ClienteController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+            return Ok(respuesta);
 
-        // GET: ClienteController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: ClienteController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
         }
     }
 }

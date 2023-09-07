@@ -1,83 +1,135 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using APIHotel.BLL;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace APIHotel.Controllers
 {
+    [ApiController]
+    [Route("[controller]")]
     public class HabitacionController : Controller
     {
-        // GET: HabitacionController
-        public ActionResult Index()
+        public IConfiguration configuration;
+        private Habitacion habitacion;
+        public HabitacionController(IConfiguration configuration)
         {
-            return View();
+            this.configuration = configuration;
+
+            habitacion = new(this.configuration);
         }
 
-        // GET: HabitacionController/Details/5
-        public ActionResult Details(int id)
+        [HttpGet("listar")]
+        public IActionResult Listar()
         {
-            return View();
+
+            var respuesta = habitacion.Listar();
+
+            return Ok(respuesta);
+
         }
 
-        // GET: HabitacionController/Create
-        public ActionResult Create()
+        [HttpGet("listar/{id}")]
+        public IActionResult Buscar(int id)
         {
-            return View();
+
+            var respuesta = habitacion.Buscar(id);
+
+            return Ok(respuesta);
+
         }
 
-        // POST: HabitacionController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        [HttpPost("agregar")]
+        public IActionResult Agregar([FromBody] JsonElement resultado)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var respuesta = habitacion.Agregar(resultado);
+
+            return Ok(respuesta);
+
         }
 
-        // GET: HabitacionController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpPut("modificar/{id}")]
+        public IActionResult Modificar(int id, [FromBody] JsonElement resultado)
         {
-            return View();
+            var respuesta = habitacion.Modificar(id, resultado);
+
+            return Ok(respuesta);
+
         }
 
-        // POST: HabitacionController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        [HttpGet("listar/estatus")]
+        public IActionResult ListarEstatus()
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+
+            var respuesta = habitacion.ListarEstatus();
+
+            return Ok(respuesta);
+
         }
 
-        // GET: HabitacionController/Delete/5
-        public ActionResult Delete(int id)
+        [HttpGet("buscar/estatus/{id}")]
+        public IActionResult BuscarEstatus(int id)
         {
-            return View();
+
+            var respuesta = habitacion.BuscarEstatus(id);
+
+            return Ok(respuesta);
+
         }
 
-        // POST: HabitacionController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        [HttpPost("agregar/estatus")]
+        public IActionResult AgregarEstatus([FromBody] JsonElement resultado)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            var respuesta = habitacion.AgregarEstatus(resultado);
+
+            return Ok(respuesta);
+
+        }
+
+        [HttpPut("modificar/estatus/{id}")]
+        public IActionResult ModificarEstatus(int id, [FromBody] JsonElement resultado)
+        {
+            var respuesta = habitacion.ModificarEstatus(id, resultado);
+
+            return Ok(respuesta);
+
+        }
+
+        [HttpGet("listar/tipo")]
+        public IActionResult ListarTipo()
+        {
+
+            var respuesta = habitacion.ListarTipo();
+
+            return Ok(respuesta);
+
+        }
+
+        [HttpGet("buscar/tipo/{id}")]
+        public IActionResult BuscarTipo(int id)
+        {
+
+            var respuesta = habitacion.BuscarTipo(id);
+
+            return Ok(respuesta);
+
+        }
+
+        [HttpPost("agregar/tipo")]
+        public IActionResult AgregarTipo([FromBody] JsonElement resultado)
+        {
+            var respuesta = habitacion.AgregarTipo(resultado);
+
+            return Ok(respuesta);
+
+        }
+
+        [HttpPut("modificar/tipo/{id}")]
+        public IActionResult ModificarTipo(int id, [FromBody] JsonElement resultado)
+        {
+            var respuesta = habitacion.ModificarTipo(id, resultado);
+
+            return Ok(respuesta);
+
         }
     }
 }

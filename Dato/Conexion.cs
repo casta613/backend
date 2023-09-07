@@ -15,7 +15,7 @@ namespace APIHotel.Dato
                 SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
                 builder.DataSource = configuration.GetSection("SQLServer").Value;
                 builder.InitialCatalog = configuration.GetSection("SQLDatabase").Value;
-                builder.UserID = configuration.GetSection("SQLlUser").Value;
+               builder.UserID = configuration.GetSection("SQLlUser").Value;
                 builder.Password = configuration.GetSection("SQLPassword").Value;
                 builder.ApplicationName = configuration.GetSection("SQLDatabase").Value;
 

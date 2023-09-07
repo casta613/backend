@@ -22,7 +22,7 @@ namespace APIHotel.BLL
             try
             {
                 var conn = conexion.GetConnection();
-                List<RespAgencia> agencias = new();
+                List<AgenciaMOD> agencias = new();
                 conn.Open();
 
 
@@ -37,7 +37,7 @@ namespace APIHotel.BLL
                 {
 
 
-                    agencias.Add(new RespAgencia
+                    agencias.Add(new AgenciaMOD
                     {
                         AgenciaID = (long)reader["AgenciaID"],
                         Nombre = reader["Nombre"].ToString(),
@@ -64,7 +64,7 @@ namespace APIHotel.BLL
             {
                
                 var conn = conexion.GetConnection();
-                var agencia = new ReqAgencia();
+                var agencia = new AgenciaMOD();
                 conn.Open();
 
 
@@ -102,7 +102,7 @@ namespace APIHotel.BLL
         {
             try
             {
-                var agencia = Agencia.Deserialize<ReqAgencia>();
+                var agencia = Agencia.Deserialize<AgenciaMOD>();
                 var conn = conexion.GetConnection();
                 conn.Open();
 
@@ -130,7 +130,7 @@ namespace APIHotel.BLL
         {
             try
             {
-                var agencia = Agencia.Deserialize<ReqAgencia>();
+                var agencia = Agencia.Deserialize<AgenciaMOD>();
                 var conn = conexion.GetConnection();
                 conn.Open();
 

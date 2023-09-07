@@ -1,8 +1,8 @@
 ﻿namespace APIHotel.Modelo
 {
-    public class ReqAgencia
+    public class ClienteMOD
     {
-        public long? AgenciaID { get; set; }
+        public long? ClienteID { get; set; }
         public string? Nombre { get; set; }
         public string? Telefono { get; set; }
     }
