@@ -1,4 +1,5 @@
 ﻿using APIHotel.BLL;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -17,7 +18,7 @@ namespace APIHotel.Controllers
 
             agencia = new(this.configuration);
         }
-
+        [Authorize]
         [HttpGet("listar")]
         public IActionResult Listar()
         {

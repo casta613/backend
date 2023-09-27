@@ -7,5 +7,6 @@
         public long? PuestoID { get; set; }
         public string Telefono { get; set; }
         public string Horario { get; set; }
+        public string? Puesto { get; set; }
     }
 }

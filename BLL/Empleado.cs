@@ -26,7 +26,7 @@ namespace APIHotel.BLL
                 conn.Open();
 
 
-                string cadena = "select * from dbo.Empleado ";
+                string cadena = "select EmpleadoID,Telefono,Horario,e.PuestoID as PuestoID,e.Nombre as Nombre,p.Nombre as Puesto from dbo.Empleado as e inner join dbo.Puesto as p on e.PuestoID = p.PuestoID ";
                 SqlCommand command = new SqlCommand(cadena, conn);
                 command.CommandType = CommandType.Text;
                 command.CommandText = cadena;
@@ -44,6 +44,8 @@ namespace APIHotel.BLL
                         Telefono = reader["Telefono"].ToString(),
                         Horario = reader["Horario"].ToString(),
                         PuestoID = (long)reader["PuestoID"],
+                        Puesto = reader["Puesto"].ToString(),
+
 
                     });
 
