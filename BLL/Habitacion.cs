@@ -26,7 +26,8 @@ namespace APIHotel.BLL
                 conn.Open();
 
 
-                string cadena = "select * from dbo.Habitacion ";
+                string cadena = "select h.HabitacionID, h.TipoHabitacionID,h.Numero,h.Precio,h.Descripcion,h.EstatusHabitacionID,e.Nombre as EstatusHabitacion ,t.Nombre as TipoHabitacion from dbo.Habitacion h " +
+                                    " inner join dbo.EstatusHabitacion e on e.EstatusHabitacionID = h.EstatusHabitacionID inner join dbo.TipoHabitacion t on t.TipoHabitacionID = h.TipoHabitacionID ";
                 SqlCommand command = new SqlCommand(cadena, conn);
                 command.CommandType = CommandType.Text;
                 command.CommandText = cadena;
@@ -40,14 +41,15 @@ namespace APIHotel.BLL
                     habitacion.Add(new HabitacionMOD
                     {
                         HabitacionID = (long)reader["HabitacionID"],
-                        Ubicacion = reader["Ubicacion"].ToString(),
+                        Numero = reader["Numero"].ToString(),
                         Precio = (decimal)reader["Precio"],
                         Descripcion = reader["Descripcion"].ToString(),
                         TipoHabitacionID = (long)reader["TipoHabitacionID"],
                         EstatusHabitacionID = (long)reader["EstatusHabitacionID"],
+                        TipoHabitacion = reader["TipoHabitacion"].ToString(),
+                        EstatusHabitacion = reader["EstatusHabitacion"].ToString()
 
-
-                    });
+                });
 
                 }
 
@@ -72,7 +74,8 @@ namespace APIHotel.BLL
                 conn.Open();
 
 
-                string cadena = "select * from dbo.Habitacion where HabitacionID = @HabitacionID ";
+                string cadena = "select h.HabitacionID, h.TipoHabitacionID,h.Numero,h.Precio,h.Descripcion,h.EstatusHabitacionID,e.Nombre as EstatusHabitacion ,t.Nombre as TipoHabitacion from dbo.Habitacion h " +
+                                    " inner join dbo.EstatusHabitacion e on e.EstatusHabitacionID = h.EstatusHabitacionID inner join dbo.TipoHabitacion t on t.TipoHabitacionID = h.TipoHabitacionID  where HabitacionID = @HabitacionID ";
                 SqlCommand command = new SqlCommand(cadena, conn);
                 command.CommandType = CommandType.Text;
                 command.CommandText = cadena;
@@ -84,11 +87,13 @@ namespace APIHotel.BLL
                 {
 
                     habitacion.HabitacionID = (long)reader["HabitacionID"];
-                    habitacion.Ubicacion = reader["Ubicacion"].ToString();
+                    habitacion.Numero = reader["Numero"].ToString();
                     habitacion.Precio = (decimal)reader["Precio"];
                     habitacion.Descripcion = reader["Descripcion"].ToString();
                     habitacion.TipoHabitacionID = (long)reader["TipoHabitacionID"];
+                    habitacion.TipoHabitacion = reader["TipoHabitacion"].ToString();
                     habitacion.EstatusHabitacionID = (long)reader["EstatusHabitacionID"];
+                    
 
 
                 }
@@ -104,6 +109,8 @@ namespace APIHotel.BLL
             }
         }
 
+
+
         public object Agregar(JsonElement Habitacion)
         {
             try
@@ -113,11 +120,11 @@ namespace APIHotel.BLL
                 conn.Open();
 
 
-                string cadena = "insert into dbo.Habitacion (Ubicacion,Precio,Descripcion,TipoHabitacionID,EstatusHabitacionID ) values (@Ubicacion,@Precio,@Descripcion,@TipoHabitacionID,@EstatusHabitacionID )";
+                string cadena = "insert into dbo.Habitacion (Numero,Precio,Descripcion,TipoHabitacionID,EstatusHabitacionID ) values (@Numero,@Precio,@Descripcion,@TipoHabitacionID,@EstatusHabitacionID )";
                 SqlCommand command = new SqlCommand(cadena, conn);
                 command.CommandType = CommandType.Text;
                 command.CommandText = cadena;
-                command.Parameters.AddWithValue("@Ubicacion", habitacion.Ubicacion);
+                command.Parameters.AddWithValue("@Numero", habitacion.Numero);
                 command.Parameters.AddWithValue("@Precio", habitacion.Precio);
                 command.Parameters.AddWithValue("@Descripcion", habitacion.Descripcion);
                 command.Parameters.AddWithValue("@TipoHabitacionID", habitacion.TipoHabitacionID);
@@ -145,11 +152,11 @@ namespace APIHotel.BLL
                 conn.Open();
 
 
-                string cadena = "update dbo.Habitacion set Ubicacion = @Ubicacion,Precio = @Precio,Descripcion = @Descripcion,TipoHabitacionID = @TipoHabitacionID,EstatusHabitacionID=@EstatusHabitacionID where HabitacionID = @HabitacionID";
+                string cadena = "update dbo.Habitacion set Numero = @Numero,Precio = @Precio,Descripcion = @Descripcion,TipoHabitacionID = @TipoHabitacionID,EstatusHabitacionID=@EstatusHabitacionID where HabitacionID = @HabitacionID";
                 SqlCommand command = new SqlCommand(cadena, conn);
                 command.CommandType = CommandType.Text;
                 command.CommandText = cadena;
-                command.Parameters.AddWithValue("@Ubicacion", habitacion.Ubicacion);
+                command.Parameters.AddWithValue("@Numero", habitacion.Numero);
                 command.Parameters.AddWithValue("@Precio", habitacion.Precio);
                 command.Parameters.AddWithValue("@Descripcion", habitacion.Descripcion);
                 command.Parameters.AddWithValue("@TipoHabitacionID", habitacion.TipoHabitacionID);

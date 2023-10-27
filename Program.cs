@@ -16,7 +16,6 @@ builder.Services.AddControllers()
     });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSingleton<Acceso>();
-builder.Services.AddSingleton<Agencia>();
 builder.Services.AddSingleton<Habitacion>();
 
 builder.Services.AddCors(options =>

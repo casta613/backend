@@ -2,7 +2,9 @@
 using APIHotel.Modelo;
 using System.Data;
 using System.Data.SqlClient;
+using System.Dynamic;
 using System.Text.Json;
+
 
 namespace APIHotel.BLL
 {
@@ -10,13 +12,35 @@ namespace APIHotel.BLL
     {
         public IConfiguration configuration;
         private Conexion conexion;
+        private GenerarDocumento documento;
         public Reserva(IConfiguration configuration)
         {
             this.configuration = configuration;
 
             conexion = new(this.configuration);
+            documento = new(this.configuration);
         }
+        public object Reporte()
+        {
+            try
+            {
+                dynamic response = this.Listar();
+             
 
+                dynamic dynamicObject = new ExpandoObject();
+                dynamicObject.Cliente = "Cliente";
+                dynamicObject.Celular = "Celular";
+                dynamicObject.NumeroHabitacion = "Habitacion";
+                dynamicObject.FechaEntrada = "Fecha Entrada";
+                dynamicObject.FechaSalida = "Fecha Salida";
+                int status = 200;
+                return documento.GetExcel(dynamicObject, response, ref status);
+                
+            }catch (Exception ex)
+            {
+                throw new Exception("", ex);
+            }
+        }
         public object Listar()
         {
             try
@@ -26,7 +50,7 @@ namespace APIHotel.BLL
                 conn.Open();
 
 
-                string cadena = "select * from dbo.ReservaHabitacion ";
+                string cadena = "select ReservaHabitacionID,r.ClienteID,r.HabitacionID,Fecha, FechaEntrada,FechaSalida,c.Celular,CONCAT(c.Nombre,' ',c.Apellido)as Cliente,h.Numero from dbo.ReservaHabitacion r inner join dbo.Cliente c on c.ClienteID = r.ClienteID inner join dbo.Habitacion h on h.HabitacionID = r.HabitacionID order by Fecha desc";
                 SqlCommand command = new SqlCommand(cadena, conn);
                 command.CommandType = CommandType.Text;
                 command.CommandText = cadena;
@@ -42,9 +66,9 @@ namespace APIHotel.BLL
                         ReservaHabitacionID = (long)reader["ReservaHabitacionID"],
                         ClienteID = (long)reader["ClienteID"],
                         HabitacionID = (long)reader["HabitacionID"],
-                        EmpleadoID = (long)reader["EmpleadoID"],
-                        AgenciaID = (long)reader["AgenciaID"],
-                        EstatusReservaID = (long)reader["EstatusReservaID"],
+                        Cliente = reader["Cliente"].ToString(),
+                        Celular = reader["Celular"].ToString(),
+                        NumeroHabitacion = reader["Numero"].ToString(),
                         Fecha = (reader["Fecha"] != DBNull.Value) ? (DateTime)reader["Fecha"] : (DateTime?)null,
                         FechaEntrada = (reader["FechaEntrada"] != DBNull.Value) ? (DateTime)reader["FechaEntrada"] : (DateTime?)null,
                         FechaSalida = (reader["FechaSalida"] != DBNull.Value) ? (DateTime)reader["FechaSalida"] : (DateTime?)null,
@@ -88,9 +112,7 @@ namespace APIHotel.BLL
                     reservaHabitacion.ReservaHabitacionID = (long)reader["ReservaHabitacionID"];
                     reservaHabitacion.ClienteID = (long)reader["ClienteID"];
                     reservaHabitacion.HabitacionID = (long)reader["HabitacionID"];
-                    reservaHabitacion.EmpleadoID = (long)reader["EmpleadoID"];
-                    reservaHabitacion.AgenciaID = (long)reader["AgenciaID"];
-                    reservaHabitacion.EstatusReservaID = (long)reader["EstatusReservaID"];
+                 
                     reservaHabitacion.Fecha = (reader["Fecha"] != DBNull.Value) ? (DateTime)reader["Fecha"] : (DateTime?)null;
                     reservaHabitacion.FechaEntrada = (reader["FechaEntrada"] != DBNull.Value) ? (DateTime)reader["FechaEntrada"] : (DateTime?)null;
                     reservaHabitacion.FechaSalida = (reader["FechaSalida"] != DBNull.Value) ? (DateTime)reader["FechaSalida"] : (DateTime?)null;
@@ -121,20 +143,35 @@ namespace APIHotel.BLL
                 string fechaSalida = (reservaHabitacion.FechaSalida != null) ? reservaHabitacion.FechaSalida.Value.ToString("yyyy-MM-dd HH:mm:ss") : null;
 
                
-                string cadena = "insert into dbo.ReservaHabitacion (ClienteID,HabitacionID,EmpleadoID,AgenciaID,EstatusReservaID,Fecha,FechaEntrada,FechaSalida ) values (@ClienteID,@HabitacionID,@EmpleadoID,@AgenciaID,@EstatusReservaID,@Fecha,@FechaEntrada,@FechaSalida )";
+                string cadena = "insert into dbo.ReservaHabitacion (ClienteID,HabitacionID,Fecha,FechaEntrada,FechaSalida ) values (@ClienteID,@HabitacionID,@Fecha,@FechaEntrada,@FechaSalida )";
                 SqlCommand command = new SqlCommand(cadena, conn);
                 command.CommandType = CommandType.Text;
                 command.CommandText = cadena;
                 command.Parameters.AddWithValue("@ClienteID", reservaHabitacion.ClienteID);
                 command.Parameters.AddWithValue("@HabitacionID", reservaHabitacion.HabitacionID);
-                command.Parameters.AddWithValue("@EmpleadoID", reservaHabitacion.EmpleadoID);
-                command.Parameters.AddWithValue("@AgenciaID", reservaHabitacion.AgenciaID);
-                command.Parameters.AddWithValue("@EstatusReservaID", reservaHabitacion.EstatusReservaID);
+              
                 command.Parameters.AddWithValue("@Fecha", fecha);
                 command.Parameters.AddWithValue("@FechaEntrada", fechaEntrada);
                 command.Parameters.AddWithValue("@FechaSalida", fechaSalida);
 
                 command.ExecuteNonQuery();
+                conn.Close();
+
+                conn.Open();
+
+                
+
+                 cadena = "update dbo.Habitacion set EstatusHabitacionID = @EstatusHabitacionID where HabitacionID = @HabitacionID";
+                command = new SqlCommand(cadena, conn);
+                command.CommandType = CommandType.Text;
+                command.CommandText = cadena;
+                command.Parameters.AddWithValue("@EstatusHabitacionID", "10004");
+                command.Parameters.AddWithValue("@HabitacionID", reservaHabitacion.HabitacionID);
+
+
+                command.ExecuteNonQuery();
+                conn.Close();
+
 
                 return new { mensaje = "Se ingreso la reserva de la habitacion" };
 
@@ -159,15 +196,13 @@ namespace APIHotel.BLL
                 string fechaSalida = (reservaHabitacion.FechaSalida != null) ? reservaHabitacion.FechaSalida.Value.ToString("yyyy-MM-dd HH:mm:ss") : null;
 
 
-                string cadena = "update dbo.ReservaHabitacion set ClienteID = @ClienteID,HabitacionID = @HabitacionID,EmpleadoID = @EmpleadoID,AgenciaID = @AgenciaID,EstatusReservaID=@EstatusReservaID,Fecha=@Fecha,FechaEntrada=@FechaEntrada,FechaSalida=@FechaSalida where ReservaHabitacionID = @ReservaHabitacionID";
+                string cadena = "update dbo.ReservaHabitacion set ClienteID = @ClienteID,HabitacionID = @HabitacionID,Fecha=@Fecha,FechaEntrada=@FechaEntrada,FechaSalida=@FechaSalida where ReservaHabitacionID = @ReservaHabitacionID";
                 SqlCommand command = new SqlCommand(cadena, conn);
                 command.CommandType = CommandType.Text;
                 command.CommandText = cadena;
                 command.Parameters.AddWithValue("@ClienteID", reservaHabitacion.ClienteID);
                 command.Parameters.AddWithValue("@HabitacionID", reservaHabitacion.HabitacionID);
-                command.Parameters.AddWithValue("@EmpleadoID", reservaHabitacion.EmpleadoID);
-                command.Parameters.AddWithValue("@AgenciaID", reservaHabitacion.AgenciaID);
-                command.Parameters.AddWithValue("@EstatusReservaID", reservaHabitacion.EstatusReservaID);
+          
                 command.Parameters.AddWithValue("@Fecha", fecha);
                 command.Parameters.AddWithValue("@FechaEntrada", fechaEntrada);
                 command.Parameters.AddWithValue("@FechaSalida", fechaSalida);

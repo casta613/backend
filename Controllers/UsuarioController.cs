@@ -1,4 +1,5 @@
 ﻿using APIHotel.BLL;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -17,7 +18,7 @@ namespace APIHotel.Controllers
 
             usuario = new(this.configuration);
         }
-
+        [Authorize]
         [HttpGet("listar")]
         public IActionResult Listar()
         {
@@ -27,7 +28,7 @@ namespace APIHotel.Controllers
             return Ok(respuesta);
 
         }
-
+        [Authorize]
         [HttpGet("listar/{id}")]
         public IActionResult Buscar(int id)
         {
@@ -37,7 +38,7 @@ namespace APIHotel.Controllers
             return Ok(respuesta);
 
         }
-
+        [Authorize]
         [HttpPost("agregar")]
         public IActionResult Agregar([FromBody] JsonElement resultado)
         {
@@ -46,7 +47,7 @@ namespace APIHotel.Controllers
             return Ok(respuesta);
 
         }
-
+        [Authorize]
         [HttpPut("modificar/{id}")]
         public IActionResult Modificar(int id, [FromBody] JsonElement resultado)
         {
@@ -55,7 +56,7 @@ namespace APIHotel.Controllers
             return Ok(respuesta);
 
         }
-
+        [Authorize]
         [HttpGet("rol/listar")]
         public IActionResult ListarRol()
         {
@@ -65,7 +66,7 @@ namespace APIHotel.Controllers
             return Ok(respuesta);
 
         }
-
+        [Authorize]
         [HttpGet("rol/buscar/{id}")]
         public IActionResult BuscarRol(int id)
         {
@@ -75,7 +76,7 @@ namespace APIHotel.Controllers
             return Ok(respuesta);
 
         }
-
+        [Authorize]
         [HttpPost("rol/agregar")]
         public IActionResult AgregarRol([FromBody] JsonElement resultado)
         {
@@ -84,7 +85,7 @@ namespace APIHotel.Controllers
             return Ok(respuesta);
 
         }
-
+        [Authorize]
         [HttpPut("rol/modificar/{id}")]
         public IActionResult ModificarRol(int id, [FromBody] JsonElement resultado)
         {

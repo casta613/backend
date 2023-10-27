@@ -1,4 +1,5 @@
 ﻿using APIHotel.BLL;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -20,7 +21,8 @@ namespace APIHotel.Controllers
             reserva = new(this.configuration);
             }
 
-            [HttpGet("listar")]
+        [Authorize]
+        [HttpGet("listar")]
             public IActionResult Listar()
             {
 
@@ -29,8 +31,18 @@ namespace APIHotel.Controllers
                 return Ok(respuesta);
 
             }
+        [Authorize]
+        [HttpGet("reporte")]
+        public IActionResult Reporte()
+        {
 
-            [HttpGet("listar/{id}")]
+            var respuesta = reserva.Reporte();
+
+            return Ok(respuesta);
+
+        }
+        [Authorize]
+        [HttpGet("listar/{id}")]
             public IActionResult Buscar(int id)
             {
 
@@ -39,8 +51,8 @@ namespace APIHotel.Controllers
                 return Ok(respuesta);
 
             }
-
-            [HttpPost("agregar")]
+        [Authorize]
+        [HttpPost("agregar")]
             public IActionResult Agregar([FromBody] JsonElement resultado)
             {
                 var respuesta = reserva.Agregar(resultado);
@@ -48,8 +60,8 @@ namespace APIHotel.Controllers
                 return Ok(respuesta);
 
             }
-
-            [HttpPut("modificar/{id}")]
+        [Authorize]
+        [HttpPut("modificar/{id}")]
             public IActionResult Modificar(int id, [FromBody] JsonElement resultado)
             {
                 var respuesta = reserva.Modificar(id, resultado);
@@ -57,8 +69,8 @@ namespace APIHotel.Controllers
                 return Ok(respuesta);
 
             }
-
-            [HttpGet("listar/estatus")]
+        [Authorize]
+        [HttpGet("listar/estatus")]
             public IActionResult ListarEstatus()
             {
 
@@ -67,8 +79,8 @@ namespace APIHotel.Controllers
                 return Ok(respuesta);
 
             }
-
-            [HttpGet("buscar/estatus/{id}")]
+        [Authorize]
+        [HttpGet("buscar/estatus/{id}")]
             public IActionResult BuscarEstatus(int id)
             {
 
@@ -77,8 +89,8 @@ namespace APIHotel.Controllers
                 return Ok(respuesta);
 
             }
-
-            [HttpPost("agregar/estatus")]
+        [Authorize]
+        [HttpPost("agregar/estatus")]
             public IActionResult AgregarEstatus([FromBody] JsonElement resultado)
             {
                 var respuesta = reserva.AgregarEstatus(resultado);
@@ -86,8 +98,8 @@ namespace APIHotel.Controllers
                 return Ok(respuesta);
 
             }
-
-            [HttpPut("modificar/estatus/{id}")]
+        [Authorize]
+        [HttpPut("modificar/estatus/{id}")]
             public IActionResult ModificarEstatus(int id, [FromBody] JsonElement resultado)
             {
                 var respuesta = reserva.ModificarEstatus(id, resultado);

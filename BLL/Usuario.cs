@@ -26,7 +26,8 @@ namespace APIHotel.BLL
                 conn.Open();
 
 
-                string cadena = "select * from dbo.Usuario ";
+                string cadena = "select UsuarioID,Usuario,Usuario.RolID,Rol.Nombre as Rol from dbo.Usuario "
+                                +" inner join dbo.Rol on Rol.RolID = Usuario.RolID  ";
                 SqlCommand command = new SqlCommand(cadena, conn);
                 command.CommandType = CommandType.Text;
                 command.CommandText = cadena;
@@ -41,10 +42,8 @@ namespace APIHotel.BLL
                     {
                         UsuarioID = (long)reader["UsuarioID"],
                         Usuario = reader["Usuario"].ToString(),
-                        Contrasenia = reader["Contrasenia"].ToString(),
                         RolID = (long)reader["RolID"],
-                        AgenciaID = (long)reader["AgenciaID"],
-                        EmpleadoID = (long)reader["EmpleadoID"],
+                        Rol = reader["Rol"].ToString()
 
 
                     });
@@ -87,8 +86,7 @@ namespace APIHotel.BLL
                     usuario.Usuario = reader["Usuario"].ToString();
                     usuario.Contrasenia = reader["Contrasenia"].ToString();
                     usuario.RolID = (long)reader["RolID"];
-                    usuario.EmpleadoID = (long)reader["EmpleadoID"];
-                    usuario.AgenciaID = (long)reader["AgenciaID"];
+                    
 
                 }
 
@@ -112,15 +110,14 @@ namespace APIHotel.BLL
                 conn.Open();
 
 
-                string cadena = "insert into dbo.Usuario (Usuario,Contrasenia,RolID,EmpleadoID,AgenciaID ) values (@Usuario,@Contrasenia,@RolID,@EmpleadoID,@AgenciaID )";
+                string cadena = "insert into dbo.Usuario (Usuario,Contrasenia,RolID ) values (@Usuario,@Contrasenia,@RolID )";
                 SqlCommand command = new SqlCommand(cadena, conn);
                 command.CommandType = CommandType.Text;
                 command.CommandText = cadena;
                 command.Parameters.AddWithValue("@Usuario", usuario.Usuario);
-                command.Parameters.AddWithValue("@Contrasenia", usuario.Contrasenia);
+                command.Parameters.AddWithValue("@Contrasenia", BCrypt.Net.BCrypt.HashPassword(usuario.Contrasenia));
                 command.Parameters.AddWithValue("@RolID", usuario.RolID);
-                command.Parameters.AddWithValue("@EmpleadoID", usuario.EmpleadoID);
-                command.Parameters.AddWithValue("@AgenciaID", usuario.AgenciaID);
+              
 
 
 
@@ -145,15 +142,14 @@ namespace APIHotel.BLL
                 conn.Open();
 
 
-                string cadena = "update dbo.Usuario set Usuario = @Usuario,Contrasenia = @Contrasenia,RolID = @RolID,EmpleadoID = @EmpleadoID, AgenciaID = @AgenciaID where UsuarioID = @UsuarioID";
+                string cadena = "update dbo.Usuario set Usuario = @Usuario,Contrasenia = @Contrasenia,RolID = @RolID where UsuarioID = @UsuarioID";
                 SqlCommand command = new SqlCommand(cadena, conn);
                 command.CommandType = CommandType.Text;
                 command.CommandText = cadena;
                 command.Parameters.AddWithValue("@Usuario", usuario.Usuario);
-                command.Parameters.AddWithValue("@Contrasenia", usuario.Contrasenia);
+                command.Parameters.AddWithValue("@Contrasenia", BCrypt.Net.BCrypt.HashPassword(usuario.Contrasenia));
                 command.Parameters.AddWithValue("@RolID", usuario.RolID);
-                command.Parameters.AddWithValue("@EmpleadoID", usuario.EmpleadoID);
-                command.Parameters.AddWithValue("@AgenciaID", usuario.AgenciaID);
+            
                 command.Parameters.AddWithValue("@UsuarioID", id);
 
 

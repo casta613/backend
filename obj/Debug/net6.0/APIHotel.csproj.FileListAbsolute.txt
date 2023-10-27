@@ -38,3 +38,11 @@ C:\Users\casta\Desktop\APIHotel\APIHotel\bin\Debug\net6.0\Microsoft.IdentityMode
 C:\Users\casta\Desktop\APIHotel\APIHotel\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
 C:\Users\casta\Desktop\APIHotel\APIHotel\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
 C:\Users\casta\Desktop\APIHotel\APIHotel\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\casta\Desktop\APIHotel\APIHotel\bin\Debug\net6.0\BCrypt.Net-Core.dll
+C:\Users\casta\Desktop\APIHotel\APIHotel\bin\Debug\net6.0\ClosedXML.dll
+C:\Users\casta\Desktop\APIHotel\APIHotel\bin\Debug\net6.0\DocumentFormat.OpenXml.dll
+C:\Users\casta\Desktop\APIHotel\APIHotel\bin\Debug\net6.0\ExcelNumberFormat.dll
+C:\Users\casta\Desktop\APIHotel\APIHotel\bin\Debug\net6.0\Irony.dll
+C:\Users\casta\Desktop\APIHotel\APIHotel\bin\Debug\net6.0\SixLabors.Fonts.dll
+C:\Users\casta\Desktop\APIHotel\APIHotel\bin\Debug\net6.0\System.IO.Packaging.dll
+C:\Users\casta\Desktop\APIHotel\APIHotel\bin\Debug\net6.0\XLParser.dll

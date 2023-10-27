@@ -31,8 +31,8 @@ namespace APIHotel.BLL
                 object response;
                 int estatus = 0;
                 var reqAccesoMod = request.Deserialize<ReqAccesoMOD>();
-                string contrasenia = Buscar(reqAccesoMod.Usuario);
-                if (reqAccesoMod.Contrasenia.Equals("5")) {
+                (string contrasenia,string rol )= Buscar(reqAccesoMod.Usuario);
+                if (BCrypt.Net.BCrypt.Verify( reqAccesoMod.Contrasenia,contrasenia)) {
                     var issuer = configuration.GetSection("Jwt:Issuer").Value;
                     var audience = configuration.GetSection("Jwt:Audience").Value;
                     var key = Encoding.UTF8.GetBytes(configuration.GetSection("Jwt:Key").Value);
@@ -57,6 +57,7 @@ namespace APIHotel.BLL
                     RespAccesoMOD respAcceso = new();
                     respAcceso.HoraExpiracion = DateTime.UtcNow.AddMinutes(double.Parse(configuration.GetSection("TokenExpires").Value));
                     respAcceso.Token = jwtToken;
+                    respAcceso.Rol = rol;
                     estatus = 200;
                     response = respAcceso;
                 }
@@ -74,16 +75,17 @@ namespace APIHotel.BLL
             }
         }
 
-        public string Buscar(string Usuario)
+        public (string,string) Buscar(string Usuario)
         {
             try
             {
                 string contrasenia = string.Empty;
+                string rol = string.Empty;
                 var conn = dataBase.GetConnection();
                 conn.Open();
 
 
-                string cadena = "select * from dbo.Usuario where Usuario = @Usuario ";
+                string cadena = "select * from dbo.Usuario u inner join dbo.Rol r on u.RolID = r.RolID where Usuario = @Usuario ";
                 SqlCommand command = new SqlCommand(cadena, conn);
                 command.CommandType = CommandType.Text;
                 command.CommandText = cadena;
@@ -94,13 +96,13 @@ namespace APIHotel.BLL
                 if (reader.Read())
                 {
 
-
+                    rol = reader["Nombre"].ToString();
                     contrasenia = reader["Contrasenia"].ToString();
 
 
                 }
 
-                return contrasenia;
+                return (contrasenia,rol);
 
 
             }
